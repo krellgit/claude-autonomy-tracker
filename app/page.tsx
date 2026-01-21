@@ -1,4 +1,5 @@
 import Leaderboard from '@/components/Leaderboard';
+import CopyButton from '@/components/CopyButton';
 import { getLeaderboard, getStats } from '@/lib/db';
 import { Session, Stats } from '@/lib/types';
 
@@ -92,12 +93,13 @@ export default async function HomePage() {
 
           <div className="space-y-3 text-xs">
             <div>
-              <div className="font-semibold mb-1">Automatic Install</div>
-              <div className="bg-gray-100 dark:bg-gray-900 rounded p-2 font-mono text-xs overflow-x-auto">
+              <div className="font-semibold mb-2">Automatic Install</div>
+              <div className="relative bg-gray-100 dark:bg-gray-900 rounded p-2 pr-16 font-mono text-xs overflow-x-auto">
                 curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh | bash
+                <CopyButton text="curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh | bash" />
               </div>
-              <p className="text-gray-600 dark:text-gray-400 mt-1">
-                Installs hook and configures username
+              <p className="text-gray-500 dark:text-gray-500 mt-2 text-xs italic">
+                Just paste this in your Terminal and press Enter - it will install and configure everything
               </p>
             </div>
 
