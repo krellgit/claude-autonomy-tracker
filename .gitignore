@@ -26,6 +26,9 @@ yarn-error.log*
 .env*.local
 .env
 
+# database setup script (contains connection logic)
+setup-db.js
+
 # vercel
 .vercel
 

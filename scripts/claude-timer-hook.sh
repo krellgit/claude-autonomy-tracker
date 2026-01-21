@@ -5,7 +5,7 @@
 
 # Configuration
 USERNAME="${CLAUDE_TRACKER_USERNAME:-your-username-here}"
-API_URL="${CLAUDE_TRACKER_API_URL:-https://your-vercel-app.vercel.app/api/sessions}"
+API_URL="${CLAUDE_TRACKER_API_URL:-https://longcc.the-ppc-geek.org/api/sessions}"
 STATE_FILE="${HOME}/.claude-autonomy-tracker-state"
 
 # Function to get current timestamp
