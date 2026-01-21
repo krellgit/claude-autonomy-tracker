@@ -1,0 +1,38 @@
+{
+  "name": "claude-autonomy-hook",
+  "version": "1.0.0",
+  "description": "Automatically track Claude Code autonomous work periods and submit to the leaderboard",
+  "main": "lib/index.js",
+  "bin": {
+    "claude-hook": "./bin/claude-hook.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "ai",
+    "autonomy",
+    "tracking",
+    "hook",
+    "cli"
+  ],
+  "author": "krellgit",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krellgit/claude-autonomy-tracker.git"
+  },
+  "homepage": "https://longcc.the-ppc-geek.org",
+  "bugs": {
+    "url": "https://github.com/krellgit/claude-autonomy-tracker/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "prompts": "^2.4.2",
+    "chalk": "^4.1.2"
+  }
+}

@@ -92,24 +92,21 @@ export default async function HomePage() {
 
           <div className="space-y-3 text-xs">
             <div>
-              <div className="font-semibold mb-1">Option 1: NPM (Easiest)</div>
-              <div className="bg-gray-100 dark:bg-gray-900 rounded p-2 font-mono text-xs mb-1">
-                npm install -g claude-autonomy-hook
-              </div>
-              <div className="bg-gray-100 dark:bg-gray-900 rounded p-2 font-mono text-xs">
-                claude-hook setup
+              <div className="font-semibold mb-1">Automatic Install</div>
+              <div className="bg-gray-100 dark:bg-gray-900 rounded p-2 font-mono text-xs overflow-x-auto">
+                curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh | bash
               </div>
               <p className="text-gray-600 dark:text-gray-400 mt-1">
-                Follow prompts to configure
+                Installs hook and configures username
               </p>
             </div>
 
             <div className="border-t border-gray-200 dark:border-gray-700 pt-3">
-              <div className="font-semibold mb-1">Option 2: Manual Script</div>
+              <div className="font-semibold mb-1">Manual Install</div>
               <div className="space-y-1">
-                <p>1. Download hook script from GitHub</p>
-                <p>2. Set username: <code className="bg-gray-100 dark:bg-gray-900 px-1 rounded">export CLAUDE_TRACKER_USERNAME="you"</code></p>
-                <p>3. Add to Claude Code hooks</p>
+                <p>1. Download script from GitHub</p>
+                <p>2. Set <code className="bg-gray-100 dark:bg-gray-900 px-1 rounded">CLAUDE_TRACKER_USERNAME</code></p>
+                <p>3. Add to Claude Code hooks config</p>
               </div>
             </div>
           </div>
@@ -132,14 +129,6 @@ export default async function HomePage() {
               Download Script
             </a>
           </div>
-        </div>
-
-        {/* API */}
-        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-          <h3 className="text-sm font-semibold mb-2">API Endpoint</h3>
-          <code className="text-xs bg-gray-100 dark:bg-gray-900 p-2 rounded block break-all">
-            POST https://longcc.the-ppc-geek.org/api/sessions
-          </code>
         </div>
       </div>
     </div>

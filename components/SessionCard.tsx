@@ -37,11 +37,6 @@ export default function SessionCard({ session, rank }: SessionCardProps) {
             >
               {session.username}
             </Link>
-            {session.task_description && (
-              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
-                {session.task_description}
-              </p>
-            )}
           </div>
         </div>
         <div className="text-right flex-shrink-0 ml-4">
