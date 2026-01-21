@@ -230,3 +230,40 @@ export async function getUserRankings(
     return rows;
   }
 }
+
+/**
+ * Get sessions grouped by user (up to 5 per user)
+ */
+export async function getSessionsByUser(
+  usernameFilter?: string,
+  limit: number = 100
+): Promise<Session[]> {
+  // Get top 5 sessions per user using window function
+  if (usernameFilter) {
+    const query = `
+      SELECT * FROM (
+        SELECT *,
+               ROW_NUMBER() OVER (PARTITION BY username ORDER BY autonomous_duration DESC) as rn
+        FROM sessions
+        WHERE username = $1
+      ) ranked
+      WHERE rn <= 5
+      ORDER BY username, autonomous_duration DESC
+    `;
+    const { rows } = await sql.query<Session>(query, [usernameFilter]);
+    return rows;
+  } else {
+    const query = `
+      SELECT * FROM (
+        SELECT *,
+               ROW_NUMBER() OVER (PARTITION BY username ORDER BY autonomous_duration DESC) as rn
+        FROM sessions
+      ) ranked
+      WHERE rn <= 5
+      ORDER BY username, autonomous_duration DESC
+      LIMIT $1
+    `;
+    const { rows } = await sql.query<Session>(query, [limit]);
+    return rows;
+  }
+}

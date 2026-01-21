@@ -1,9 +1,8 @@
 import Leaderboard from '@/components/Leaderboard';
 import CopyButton from '@/components/CopyButton';
-import LimitSelector from '@/components/LimitSelector';
-import FilterControls from '@/components/FilterControls';
 import UserRankingsTable from '@/components/UserRankingsTable';
-import { getLeaderboard, getStats, getUserRankings } from '@/lib/db';
+import UsernameFilter from '@/components/UsernameFilter';
+import { getStats, getUserRankings, getSessionsByUser } from '@/lib/db';
 import { Session, Stats, UserRanking } from '@/lib/types';
 
 function formatDuration(seconds: number): string {
@@ -25,23 +24,20 @@ interface PageProps {
 export default async function HomePage({ searchParams }: PageProps) {
   const params = await searchParams;
 
-  // Parse filters for top sessions table
-  const sessionsLimit = parseInt((params.sessions_limit as string) || '5');
+  // Parse filters for top users table (always 5)
+  const topUsersLimit = 5;
 
-  // Parse filters for user rankings table
-  const usersLimit = parseInt((params.users_limit as string) || '50');
-  const userSort = (params.user_sort as 'duration' | 'sessions' | 'recent') || 'duration';
-  const userOrder = (params.user_order as 'asc' | 'desc') || 'desc';
+  // Parse filters for all sessions table
   const usernameFilter = params.username as string | undefined;
 
-  let sessions: Session[] = [];
-  let userRankings: UserRanking[] = [];
+  let topUsers: UserRanking[] = [];
+  let allSessions: Session[] = [];
   let stats: Stats | null = null;
 
   try {
-    [sessions, userRankings, stats] = await Promise.all([
-      getLeaderboard(sessionsLimit),
-      getUserRankings(usersLimit, userSort, userOrder, usernameFilter),
+    [topUsers, allSessions, stats] = await Promise.all([
+      getUserRankings(topUsersLimit, 'duration', 'desc'), // Top 5 unique users
+      getSessionsByUser(usernameFilter, 100), // Up to 5 sessions per user
       getStats()
     ]);
   } catch (error) {
@@ -94,24 +90,24 @@ export default async function HomePage({ searchParams }: PageProps) {
           </div>
         )}
 
-        {/* Table 1: Top Sessions Leaderboard */}
+        {/* Table 1: Top 5 Users (Unique) */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold">Top Sessions</h2>
-            <LimitSelector
-              paramName="sessions_limit"
-              options={[5, 10, 20, 50]}
-              defaultValue={5}
-            />
-          </div>
-          <Leaderboard sessions={sessions} title="" />
+          <h2 className="text-xl font-bold mb-4">Top 5 Users</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+            Each user shown once with their longest autonomous run
+          </p>
+          <UserRankingsTable rankings={topUsers} title="" />
         </div>
 
-        {/* Table 2: User Rankings */}
+        {/* Table 2: All Sessions by User */}
         <div>
-          <h2 className="text-xl font-bold mb-4">User Rankings</h2>
-          <FilterControls />
-          <UserRankingsTable rankings={userRankings} title="" />
+          <h2 className="text-xl font-bold mb-4">All Sessions by User</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+            Up to 5 sessions per user, grouped by username
+          </p>
+
+          <UsernameFilter />
+          <Leaderboard sessions={allSessions} title="" />
         </div>
       </div>
 
