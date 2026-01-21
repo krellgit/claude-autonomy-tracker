@@ -95,11 +95,11 @@ export default async function HomePage() {
             <div>
               <div className="font-semibold mb-2">Automatic Install</div>
               <div className="relative bg-gray-100 dark:bg-gray-900 rounded p-2 pr-16 font-mono text-xs overflow-x-auto">
-                curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh | bash
-                <CopyButton text="curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh | bash" />
+                CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh)"
+                <CopyButton text='CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh)"' />
               </div>
               <p className="text-gray-500 dark:text-gray-500 mt-2 text-xs italic">
-                Just paste this in your Terminal and press Enter - it will install and configure everything
+                Replace "yourname" with your username, paste in Terminal, and press Enter
               </p>
             </div>
 

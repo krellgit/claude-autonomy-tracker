@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Claude Code Autonomy Tracker - Installation Script
-# Usage: curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh | bash
+# Usage: CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh)"
 
 set -e
 
@@ -25,8 +25,22 @@ else
     exit 1
 fi
 
-# Prompt for username
-read -p "Enter your username for the leaderboard: " USERNAME
+# Get username from environment variable or prompt
+if [ -z "$CLAUDE_USERNAME" ]; then
+    # Check if we can prompt (stdin is a terminal)
+    if [ -t 0 ]; then
+        read -p "Enter your username for the leaderboard: " USERNAME
+    else
+        echo "❌ Error: Username not provided"
+        echo ""
+        echo "Set your username with:"
+        echo "  CLAUDE_USERNAME=yourname bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh)\""
+        echo ""
+        exit 1
+    fi
+else
+    USERNAME="$CLAUDE_USERNAME"
+fi
 
 if [ -z "$USERNAME" ]; then
     echo "❌ Username is required"
