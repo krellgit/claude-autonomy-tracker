@@ -126,40 +126,54 @@ export default async function HomePage({ searchParams }: PageProps) {
 
         {/* Setup */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-3">Setup</h2>
+          <h2 className="text-lg font-semibold mb-3">How to Submit</h2>
 
           <div className="space-y-3 text-xs">
-            {/* Step 1: Submit Top 5 */}
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded p-3">
-              <div className="font-semibold mb-2 text-green-900 dark:text-green-100">
-                1️⃣ Submit Your Top 5 Historical Runs
+            {/* Step 1: Install Skill */}
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded p-3">
+              <div className="font-semibold mb-2 text-blue-900 dark:text-blue-100">
+                1️⃣ Install the Skill (One-Time)
               </div>
               <div className="relative bg-gray-100 dark:bg-gray-900 rounded p-2 pr-16 font-mono text-xs overflow-x-auto mb-2">
-                CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/backfill.sh)"
-                <CopyButton text='CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/backfill.sh)"' />
+                bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install-skill.sh)"
+                <CopyButton text='bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install-skill.sh)"' />
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-xs">
-                Analyzes your history and submits your 5 longest runs ever
+                Installs the /longcc command in Claude Code
               </p>
             </div>
 
-            {/* Step 2: Install Hook */}
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded p-3">
-              <div className="font-semibold mb-2 text-blue-900 dark:text-blue-100">
-                2️⃣ Install Hook for Future Sessions
+            {/* Step 2: Set Username */}
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded p-3">
+              <div className="font-semibold mb-2 text-green-900 dark:text-green-100">
+                2️⃣ Set Your Username
               </div>
               <div className="relative bg-gray-100 dark:bg-gray-900 rounded p-2 pr-16 font-mono text-xs overflow-x-auto mb-2">
-                CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh)"
-                <CopyButton text='CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh)"' />
+                export CLAUDE_TRACKER_USERNAME=yourname
+                <CopyButton text='export CLAUDE_TRACKER_USERNAME=yourname' />
               </div>
               <p className="text-gray-600 dark:text-gray-400 text-xs">
-                Auto-tracks all future sessions (run once)
+                Replace "yourname" with your username
+              </p>
+            </div>
+
+            {/* Step 3: Run Command */}
+            <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded p-3">
+              <div className="font-semibold mb-2 text-purple-900 dark:text-purple-100">
+                3️⃣ Submit Your Top 5
+              </div>
+              <div className="relative bg-gray-100 dark:bg-gray-900 rounded p-2 pr-16 font-mono text-xs overflow-x-auto mb-2">
+                /longcc
+                <CopyButton text='/longcc' />
+              </div>
+              <p className="text-gray-600 dark:text-gray-400 text-xs">
+                Analyzes history and submits top 5 longest runs
               </p>
             </div>
 
             <div className="border-t border-gray-200 dark:border-gray-700 pt-2">
               <p className="text-xs text-gray-500 dark:text-gray-500 italic">
-                💡 Replace "yourname" with your username. Works in WSL, Linux, macOS, Git Bash.
+                💡 Run /longcc anytime to update your leaderboard position
               </p>
             </div>
           </div>
