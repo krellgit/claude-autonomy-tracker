@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { Session, SessionInput, Stats, QueryParams } from './types';
+import { Session, SessionInput, Stats, QueryParams, UserRanking } from './types';
 
 /**
  * Insert a new session into the database
@@ -49,22 +49,41 @@ export async function getSessions(params: QueryParams = {}): Promise<Session[]> 
     order = 'desc'
   } = params;
 
-  let query = 'SELECT * FROM sessions';
-  const conditions: string[] = [];
+  // Validate sort column against allowlist (prevent SQL injection)
+  const ALLOWED_SORT_COLUMNS: Record<string, string> = {
+    'duration': 'autonomous_duration',
+    'autonomous_duration': 'autonomous_duration',
+    'created_at': 'created_at',
+    'action_count': 'action_count'
+  };
 
+  const sortColumn = ALLOWED_SORT_COLUMNS[sort] || 'created_at';
+
+  // Validate order direction (prevent SQL injection)
+  const orderDirection = order.toLowerCase() === 'asc' ? 'ASC' : 'DESC';
+
+  // Use parameterized queries to prevent SQL injection
+  // Note: sortColumn is already validated against ALLOWED_SORT_COLUMNS allowlist
   if (username) {
-    conditions.push(`username = '${username}'`);
+    const query = `
+      SELECT * FROM sessions
+      WHERE username = $1
+      ORDER BY ${sortColumn} ${orderDirection}
+      LIMIT $2
+      OFFSET $3
+    `;
+    const { rows } = await sql.query<Session>(query, [username, limit, offset]);
+    return rows;
+  } else {
+    const query = `
+      SELECT * FROM sessions
+      ORDER BY ${sortColumn} ${orderDirection}
+      LIMIT $1
+      OFFSET $2
+    `;
+    const { rows } = await sql.query<Session>(query, [limit, offset]);
+    return rows;
   }
-
-  if (conditions.length > 0) {
-    query += ' WHERE ' + conditions.join(' AND ');
-  }
-
-  query += ` ORDER BY ${sort} ${order.toUpperCase()}`;
-  query += ` LIMIT ${limit} OFFSET ${offset}`;
-
-  const { rows } = await sql.query<Session>(query);
-  return rows;
 }
 
 /**
@@ -153,4 +172,59 @@ export async function getUserStats(username: string) {
     averageDuration: parseInt(rows[0].average_duration) || 0,
     totalActions: parseInt(rows[0].total_actions) || 0
   };
+}
+
+/**
+ * Get user rankings (unique users with their best performance)
+ */
+export async function getUserRankings(
+  limit: number = 50,
+  sortBy: 'duration' | 'sessions' | 'recent' = 'duration',
+  order: 'asc' | 'desc' = 'desc',
+  usernameFilter?: string
+): Promise<UserRanking[]> {
+  // Validate sort option and map to column name
+  const SORT_COLUMNS: Record<string, string> = {
+    'duration': 'best_duration',
+    'sessions': 'session_count',
+    'recent': 'latest_session'
+  };
+
+  const sortColumn = SORT_COLUMNS[sortBy] || 'best_duration';
+  const orderDirection = order.toLowerCase() === 'asc' ? 'ASC' : 'DESC';
+
+  // Build query with optional username filter
+  // Note: sortColumn is already validated against SORT_COLUMNS allowlist
+  if (usernameFilter) {
+    const query = `
+      SELECT
+        username,
+        MAX(autonomous_duration)::INTEGER as best_duration,
+        MAX(action_count)::INTEGER as best_action_count,
+        COUNT(*)::INTEGER as session_count,
+        MAX(created_at) as latest_session
+      FROM sessions
+      WHERE username = $1
+      GROUP BY username
+      ORDER BY ${sortColumn} ${orderDirection}
+      LIMIT $2
+    `;
+    const { rows } = await sql.query<UserRanking>(query, [usernameFilter, limit]);
+    return rows;
+  } else {
+    const query = `
+      SELECT
+        username,
+        MAX(autonomous_duration)::INTEGER as best_duration,
+        MAX(action_count)::INTEGER as best_action_count,
+        COUNT(*)::INTEGER as session_count,
+        MAX(created_at) as latest_session
+      FROM sessions
+      GROUP BY username
+      ORDER BY ${sortColumn} ${orderDirection}
+      LIMIT $1
+    `;
+    const { rows } = await sql.query<UserRanking>(query, [limit]);
+    return rows;
+  }
 }

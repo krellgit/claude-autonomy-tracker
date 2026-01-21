@@ -10,7 +10,9 @@ export default function Leaderboard({ sessions, title = 'Top Sessions' }: Leader
   if (sessions.length === 0) {
     return (
       <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 text-center">
-        <p className="text-sm text-gray-500 dark:text-gray-400">No sessions yet. Install the hook to start tracking!</p>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          No sessions found. Install the hook to start tracking!
+        </p>
       </div>
     );
   }

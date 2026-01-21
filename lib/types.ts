@@ -41,3 +41,18 @@ export interface QueryParams {
   sort?: 'duration' | 'created_at' | 'action_count';
   order?: 'asc' | 'desc';
 }
+
+export interface UserRanking {
+  username: string;
+  best_duration: number;
+  best_action_count: number;
+  session_count: number;
+  latest_session: Date;
+}
+
+export interface UserRankingsParams {
+  limit?: number;
+  sortBy?: 'duration' | 'sessions' | 'recent';
+  order?: 'asc' | 'desc';
+  username?: string;
+}

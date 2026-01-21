@@ -1,7 +1,10 @@
 import Leaderboard from '@/components/Leaderboard';
 import CopyButton from '@/components/CopyButton';
-import { getLeaderboard, getStats } from '@/lib/db';
-import { Session, Stats } from '@/lib/types';
+import LimitSelector from '@/components/LimitSelector';
+import FilterControls from '@/components/FilterControls';
+import UserRankingsTable from '@/components/UserRankingsTable';
+import { getLeaderboard, getStats, getUserRankings } from '@/lib/db';
+import { Session, Stats, UserRanking } from '@/lib/types';
 
 function formatDuration(seconds: number): string {
   const hours = Math.floor(seconds / 3600);
@@ -15,13 +18,30 @@ function formatDuration(seconds: number): string {
 
 export const revalidate = 60;
 
-export default async function HomePage() {
+interface PageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function HomePage({ searchParams }: PageProps) {
+  const params = await searchParams;
+
+  // Parse filters for top sessions table
+  const sessionsLimit = parseInt((params.sessions_limit as string) || '5');
+
+  // Parse filters for user rankings table
+  const usersLimit = parseInt((params.users_limit as string) || '50');
+  const userSort = (params.user_sort as 'duration' | 'sessions' | 'recent') || 'duration';
+  const userOrder = (params.user_order as 'asc' | 'desc') || 'desc';
+  const usernameFilter = params.username as string | undefined;
+
   let sessions: Session[] = [];
+  let userRankings: UserRanking[] = [];
   let stats: Stats | null = null;
 
   try {
-    [sessions, stats] = await Promise.all([
-      getLeaderboard(10),
+    [sessions, userRankings, stats] = await Promise.all([
+      getLeaderboard(sessionsLimit),
+      getUserRankings(usersLimit, userSort, userOrder, usernameFilter),
       getStats()
     ]);
   } catch (error) {
@@ -68,9 +88,24 @@ export default async function HomePage() {
           </div>
         )}
 
-        {/* Leaderboard */}
+        {/* Table 1: Top Sessions Leaderboard */}
         <div>
-          <Leaderboard sessions={sessions} title="Top Sessions" />
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">Top Sessions</h2>
+            <LimitSelector
+              paramName="sessions_limit"
+              options={[5, 10, 20, 50]}
+              defaultValue={5}
+            />
+          </div>
+          <Leaderboard sessions={sessions} title="" />
+        </div>
+
+        {/* Table 2: User Rankings */}
+        <div>
+          <h2 className="text-xl font-bold mb-4">User Rankings</h2>
+          <FilterControls />
+          <UserRankingsTable rankings={userRankings} title="" />
         </div>
       </div>
 
