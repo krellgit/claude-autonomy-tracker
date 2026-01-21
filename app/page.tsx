@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Leaderboard from '@/components/Leaderboard';
 import { getLeaderboard, getStats } from '@/lib/db';
+import { Session, Stats } from '@/lib/types';
 
 function formatDuration(seconds: number): string {
   const hours = Math.floor(seconds / 3600);
@@ -15,8 +16,8 @@ function formatDuration(seconds: number): string {
 export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function HomePage() {
-  let sessions = [];
-  let stats = null;
+  let sessions: Session[] = [];
+  let stats: Stats | null = null;
 
   try {
     [sessions, stats] = await Promise.all([

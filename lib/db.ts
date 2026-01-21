@@ -5,6 +5,13 @@ import { Session, SessionInput, Stats, QueryParams } from './types';
  * Insert a new session into the database
  */
 export async function createSession(input: SessionInput): Promise<Session> {
+  const sessionStart = input.session_start
+    ? (typeof input.session_start === 'string' ? input.session_start : input.session_start.toISOString())
+    : null;
+  const sessionEnd = input.session_end
+    ? (typeof input.session_end === 'string' ? input.session_end : input.session_end.toISOString())
+    : null;
+
   const { rows } = await sql<Session>`
     INSERT INTO sessions (
       username,
@@ -20,8 +27,8 @@ export async function createSession(input: SessionInput): Promise<Session> {
       ${input.task_description || null},
       ${input.autonomous_duration},
       ${input.action_count || 0},
-      ${input.session_start || null},
-      ${input.session_end || null},
+      ${sessionStart},
+      ${sessionEnd},
       ${JSON.stringify(input.metadata || {})}::jsonb
     )
     RETURNING *

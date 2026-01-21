@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getUserSessions, getUserStats } from '@/lib/db';
 import SessionCard from '@/components/SessionCard';
+import { Session } from '@/lib/types';
 
 function formatDuration(seconds: number): string {
   const hours = Math.floor(seconds / 3600);
@@ -22,8 +23,8 @@ export default async function UserPage({ params }: PageProps) {
   const { username } = await params;
   const decodedUsername = decodeURIComponent(username);
 
-  let sessions = [];
-  let stats = null;
+  let sessions: Session[] = [];
+  let stats: any = null;
 
   try {
     [sessions, stats] = await Promise.all([
