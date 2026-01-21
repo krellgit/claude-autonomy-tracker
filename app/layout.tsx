@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -28,6 +29,7 @@ export default function RootLayout({
             <p>&copy; 2026 Claude Code Autonomy Tracker</p>
           </div>
         </footer>
+        <Analytics />
       </body>
     </html>
   );
