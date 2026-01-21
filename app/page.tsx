@@ -126,27 +126,41 @@ export default async function HomePage({ searchParams }: PageProps) {
 
         {/* Setup */}
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-          <h2 className="text-lg font-semibold mb-3">Quick Setup</h2>
+          <h2 className="text-lg font-semibold mb-3">Setup</h2>
 
           <div className="space-y-3 text-xs">
-            <div>
-              <div className="font-semibold mb-2">Automatic Install</div>
-              <div className="relative bg-gray-100 dark:bg-gray-900 rounded p-2 pr-16 font-mono text-xs overflow-x-auto">
-                CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh)"
-                <CopyButton text='CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh)"' />
+            {/* Step 1: Submit Top 5 */}
+            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded p-3">
+              <div className="font-semibold mb-2 text-green-900 dark:text-green-100">
+                1️⃣ Submit Your Top 5 Historical Runs
               </div>
-              <p className="text-gray-500 dark:text-gray-500 mt-2 text-xs italic">
-                Replace "yourname" with your username, paste in Terminal, and press Enter
+              <div className="relative bg-gray-100 dark:bg-gray-900 rounded p-2 pr-16 font-mono text-xs overflow-x-auto mb-2">
+                CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/backfill.sh)"
+                <CopyButton text='CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/backfill.sh)"' />
+              </div>
+              <p className="text-gray-600 dark:text-gray-400 text-xs">
+                Analyzes your history and submits your 5 longest runs ever
               </p>
             </div>
 
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-3">
-              <div className="font-semibold mb-1">Manual Install</div>
-              <div className="space-y-1">
-                <p>1. Download script from GitHub</p>
-                <p>2. Set <code className="bg-gray-100 dark:bg-gray-900 px-1 rounded">CLAUDE_TRACKER_USERNAME</code></p>
-                <p>3. Add to Claude Code hooks config</p>
+            {/* Step 2: Install Hook */}
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded p-3">
+              <div className="font-semibold mb-2 text-blue-900 dark:text-blue-100">
+                2️⃣ Install Hook for Future Sessions
               </div>
+              <div className="relative bg-gray-100 dark:bg-gray-900 rounded p-2 pr-16 font-mono text-xs overflow-x-auto mb-2">
+                CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh)"
+                <CopyButton text='CLAUDE_USERNAME=yourname bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install.sh)"' />
+              </div>
+              <p className="text-gray-600 dark:text-gray-400 text-xs">
+                Auto-tracks all future sessions (run once)
+              </p>
+            </div>
+
+            <div className="border-t border-gray-200 dark:border-gray-700 pt-2">
+              <p className="text-xs text-gray-500 dark:text-gray-500 italic">
+                💡 Replace "yourname" with your username. Works in WSL, Linux, macOS, Git Bash.
+              </p>
             </div>
           </div>
 
@@ -158,14 +172,6 @@ export default async function HomePage({ searchParams }: PageProps) {
               className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-3 rounded"
             >
               View on GitHub
-            </a>
-            <a
-              href="https://github.com/krellgit/claude-autonomy-tracker/blob/master/scripts/claude-timer-hook.sh"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full text-center bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium py-2 px-3 rounded"
-            >
-              Download Script
             </a>
           </div>
         </div>
