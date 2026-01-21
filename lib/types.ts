@@ -27,6 +27,7 @@ export interface Stats {
   longestDuration: number;
   averageDuration: number;
   totalActions: number;
+  maxActions: number;
   topUsers: Array<{
     username: string;
     sessionCount: number;

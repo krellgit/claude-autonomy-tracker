@@ -16,7 +16,7 @@ function formatDuration(seconds: number): string {
   return `${minutes}m`;
 }
 
-export const revalidate = 60;
+export const revalidate = 3600; // Revalidate every hour (stats cached for better performance)
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -62,25 +62,31 @@ export default async function HomePage({ searchParams }: PageProps) {
 
         {/* Stats Grid */}
         {stats && stats.totalSessions > 0 && (
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <div className="text-xs text-gray-500 dark:text-gray-400">Sessions</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Total Runs</div>
               <div className="text-2xl font-bold text-blue-600">{stats.totalSessions}</div>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <div className="text-xs text-gray-500 dark:text-gray-400">Longest</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Longest Run</div>
               <div className="text-2xl font-bold text-green-600">
                 {formatDuration(stats.longestDuration)}
               </div>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <div className="text-xs text-gray-500 dark:text-gray-400">Average</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Average Run</div>
               <div className="text-2xl font-bold text-purple-600">
                 {formatDuration(stats.averageDuration)}
               </div>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <div className="text-xs text-gray-500 dark:text-gray-400">Actions</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Most Tools Used</div>
+              <div className="text-2xl font-bold text-red-600">
+                {stats.maxActions}
+              </div>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+              <div className="text-xs text-gray-500 dark:text-gray-400">Total Actions</div>
               <div className="text-2xl font-bold text-orange-600">
                 {stats.totalActions.toLocaleString()}
               </div>

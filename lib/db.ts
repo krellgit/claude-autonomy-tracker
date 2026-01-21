@@ -123,7 +123,8 @@ export async function getStats(): Promise<Stats> {
       COUNT(*) as total_sessions,
       MAX(autonomous_duration) as longest_duration,
       AVG(autonomous_duration)::INTEGER as average_duration,
-      SUM(action_count)::INTEGER as total_actions
+      SUM(action_count)::INTEGER as total_actions,
+      MAX(action_count) as max_actions
     FROM sessions
   `;
 
@@ -144,6 +145,7 @@ export async function getStats(): Promise<Stats> {
     longestDuration: parseInt(statsRows[0].longest_duration) || 0,
     averageDuration: parseInt(statsRows[0].average_duration) || 0,
     totalActions: parseInt(statsRows[0].total_actions) || 0,
+    maxActions: parseInt(statsRows[0].max_actions) || 0,
     topUsers: topUsersRows.map(row => ({
       username: row.username,
       sessionCount: parseInt(row.session_count),
