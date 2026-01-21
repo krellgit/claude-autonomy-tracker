@@ -1,15 +1,15 @@
 # Claude Code Autonomy Tracker
 
-A Next.js web application that tracks and measures how long Claude Code can work autonomously. Users can submit their session data and compare results with others on a global leaderboard.
+A Next.js web application that tracks and measures how long Claude Code can work autonomously. Sessions are automatically tracked via a hook script and submitted to a global leaderboard where users can compare results.
 
 ## Features
 
-1. Session submission (manual or automatic via hook script)
+1. Automatic session tracking via Claude Code hooks
 2. Global leaderboard showing longest autonomous sessions
 3. User profiles with personal statistics
 4. Real-time statistics dashboard
 5. RESTful API for programmatic access
-6. Automatic session tracking via Claude Code hooks
+6. No manual submission required - everything is automated
 
 ## Tech Stack
 
@@ -115,19 +115,13 @@ chmod +x claude-timer-hook.sh
 
 2. Configure the script
 
-Edit the script and set your username:
-
-```bash
-USERNAME="your-username"
-API_URL="https://your-vercel-app.vercel.app/api/sessions"
-```
-
-Or set environment variables:
+Set your username as an environment variable:
 
 ```bash
 export CLAUDE_TRACKER_USERNAME="your-username"
-export CLAUDE_TRACKER_API_URL="https://your-vercel-app.vercel.app/api/sessions"
 ```
+
+The API URL is already configured to use the production endpoint: `https://longcc.the-ppc-geek.org/api/sessions`
 
 3. Install in Claude Code hooks
 
@@ -215,8 +209,6 @@ claude-autonomy-tracker/
 │   ├── page.tsx                 # Homepage with leaderboard
 │   ├── layout.tsx               # Root layout
 │   ├── globals.css              # Global styles
-│   ├── submit/
-│   │   └── page.tsx            # Manual submission form
 │   ├── user/
 │   │   └── [username]/
 │   │       └── page.tsx        # User profile page
@@ -227,8 +219,7 @@ claude-autonomy-tracker/
 │           └── route.ts        # Stats API endpoint
 ├── components/
 │   ├── Leaderboard.tsx         # Leaderboard component
-│   ├── SessionCard.tsx         # Session card component
-│   └── SubmitForm.tsx          # Submission form component
+│   └── SessionCard.tsx         # Session card component
 ├── lib/
 │   ├── db.ts                   # Database utilities
 │   └── types.ts                # TypeScript types

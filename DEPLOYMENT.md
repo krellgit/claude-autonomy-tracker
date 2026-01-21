@@ -93,12 +93,7 @@ API_URL="https://longCC.the-ppc-geek.org/api/sessions"
 
 ## 🧪 Testing After Setup
 
-1. **Test Manual Submission**:
-   - Visit https://claude-autonomy-tracker.vercel.app/submit
-   - Fill out the form and submit a test session
-   - Check if it appears on the homepage leaderboard
-
-2. **Test API Endpoints**:
+1. **Test API Endpoints**:
    ```bash
    # Test POST /api/sessions
    curl -X POST https://claude-autonomy-tracker.vercel.app/api/sessions \
@@ -117,7 +112,7 @@ API_URL="https://longCC.the-ppc-geek.org/api/sessions"
    curl https://claude-autonomy-tracker.vercel.app/api/stats
    ```
 
-3. **Verify Database**:
+2. **Verify Database**:
    - Check Vercel dashboard database query interface
    - Run: `SELECT * FROM sessions;`
    - Verify test data appears

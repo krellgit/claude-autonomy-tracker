@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import Leaderboard from '@/components/Leaderboard';
 import { getLeaderboard, getStats } from '@/lib/db';
 import { Session, Stats } from '@/lib/types';
@@ -36,12 +35,20 @@ export default async function HomePage() {
         <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
           Measure and compare how long Claude Code can work autonomously
         </p>
-        <Link
-          href="/submit"
-          className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-md"
-        >
-          Submit Your Session
-        </Link>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Sessions are automatically tracked via the Claude Code hook script
+        </p>
+      </div>
+
+      {/* What This Does */}
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
+        <h2 className="text-xl font-semibold mb-3 text-blue-900 dark:text-blue-100">What is this?</h2>
+        <p className="text-gray-700 dark:text-gray-300 mb-4">
+          This leaderboard tracks <strong>autonomous work periods</strong> in Claude Code - the time between when you send a message and when you send your next message. During this time, Claude Code works independently to complete tasks, execute commands, write code, and solve problems without human intervention.
+        </p>
+        <p className="text-gray-700 dark:text-gray-300">
+          The longer the autonomous period, the more complex and self-sufficient Claude Code was able to be. Install our hook script to automatically track your sessions and see how you compare with others pushing the boundaries of AI autonomy!
+        </p>
       </div>
 
       {/* Stats Grid */}
@@ -81,18 +88,29 @@ export default async function HomePage() {
       <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 mt-8">
         <h2 className="text-2xl font-bold mb-4">How It Works</h2>
         <div className="space-y-3 text-gray-700 dark:text-gray-300">
-          <p>1. Use Claude Code for your projects</p>
-          <p>2. Track the time between your messages (autonomous work periods)</p>
-          <p>3. Submit your session data here or use our hook script</p>
-          <p>4. Compare your results with others on the leaderboard</p>
+          <p>1. Download and install the Claude Code hook script from our GitHub repository</p>
+          <p>2. Configure the script with your username</p>
+          <p>3. Use Claude Code for your projects as usual</p>
+          <p>4. The hook automatically tracks time between your messages and submits sessions</p>
+          <p>5. Compare your results with others on the leaderboard</p>
         </div>
         <div className="mt-6">
-          <Link
-            href="/submit"
-            className="text-blue-600 hover:underline font-medium"
+          <a
+            href="https://github.com/krellgit/claude-autonomy-tracker/blob/master/scripts/claude-timer-hook.sh"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md"
           >
-            Learn more about submitting sessions →
-          </Link>
+            Download Hook Script
+          </a>
+          <a
+            href="https://github.com/krellgit/claude-autonomy-tracker"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block ml-4 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-md"
+          >
+            View on GitHub
+          </a>
         </div>
       </div>
     </div>
