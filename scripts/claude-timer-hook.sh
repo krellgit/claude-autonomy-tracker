@@ -24,14 +24,22 @@ send_session_data() {
     return 0
   fi
 
+  # Calculate timestamps (cross-platform compatible)
+  local end_time=$(get_timestamp)
+  local start_time=$((end_time - duration))
+
+  # Format timestamps for JSON (works on both macOS and Linux)
+  local session_start=$(date -u -r "$start_time" +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || date -u -d "@$start_time" +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || echo "")
+  local session_end=$(date -u -r "$end_time" +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || date -u -d "@$end_time" +"%Y-%m-%dT%H:%M:%SZ" 2>/dev/null || echo "")
+
   local payload=$(cat <<EOF
 {
   "username": "$USERNAME",
   "task_description": "$task_desc",
   "autonomous_duration": $duration,
   "action_count": $action_count,
-  "session_start": "$(date -u -d @$(($(get_timestamp) - duration)) +"%Y-%m-%dT%H:%M:%SZ")",
-  "session_end": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+  "session_start": "$session_start",
+  "session_end": "$session_end"
 }
 EOF
 )
