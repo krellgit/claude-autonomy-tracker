@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSession, getSessions } from '@/lib/db';
 import { SessionInput } from '@/lib/types';
+import { sql } from '@vercel/postgres';
 
 /**
  * POST /api/sessions
@@ -78,6 +79,48 @@ export async function GET(request: NextRequest) {
     console.error('Error fetching sessions:', error);
     return NextResponse.json(
       { error: 'Failed to fetch sessions' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * DELETE /api/sessions
+ * Delete sessions (requires username query param for safety)
+ */
+export async function DELETE(request: NextRequest) {
+  try {
+    const searchParams = request.nextUrl.searchParams;
+    const username = searchParams.get('username');
+    const sessionId = searchParams.get('id');
+
+    // Safety check: require either username or id
+    if (!username && !sessionId) {
+      return NextResponse.json(
+        { error: 'Must provide either username or id parameter' },
+        { status: 400 }
+      );
+    }
+
+    let deletedCount = 0;
+    if (sessionId) {
+      // Delete specific session by ID
+      const result = await sql`DELETE FROM sessions WHERE id = ${parseInt(sessionId)}`;
+      deletedCount = result.rowCount || 0;
+    } else if (username) {
+      // Delete all sessions for a user
+      const result = await sql`DELETE FROM sessions WHERE username = ${username}`;
+      deletedCount = result.rowCount || 0;
+    }
+
+    return NextResponse.json({
+      success: true,
+      deletedCount
+    });
+  } catch (error) {
+    console.error('Error deleting sessions:', error);
+    return NextResponse.json(
+      { error: 'Failed to delete sessions' },
       { status: 500 }
     );
   }
