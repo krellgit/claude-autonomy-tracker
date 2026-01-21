@@ -9,16 +9,16 @@ interface LeaderboardProps {
 export default function Leaderboard({ sessions, title = 'Top Sessions' }: LeaderboardProps) {
   if (sessions.length === 0) {
     return (
-      <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-8 text-center">
-        <p className="text-gray-500 dark:text-gray-400">No sessions recorded yet. Be the first to submit!</p>
+      <div className="bg-gray-100 dark:bg-gray-800 rounded-lg p-6 text-center">
+        <p className="text-sm text-gray-500 dark:text-gray-400">No sessions yet. Install the hook to start tracking!</p>
       </div>
     );
   }
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">{title}</h2>
-      <div className="space-y-4">
+      <h2 className="text-xl font-bold mb-4">{title}</h2>
+      <div className="space-y-3">
         {sessions.map((session, index) => (
           <SessionCard
             key={session.id}

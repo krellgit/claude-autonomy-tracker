@@ -28,6 +28,7 @@ yarn-error.log*
 
 # database setup script (contains connection logic)
 setup-db.js
+clear-test-data.js
 
 # vercel
 .vercel

@@ -15,18 +15,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <header className="bg-gray-800 text-white p-4">
+        <header className="bg-gray-800 text-white py-3 px-4">
           <div className="container mx-auto">
-            <h1 className="text-2xl font-bold">Claude Code Autonomy Tracker</h1>
-            <p className="text-sm text-gray-300">Measure autonomous work periods</p>
+            <h1 className="text-xl font-bold">Claude Code Autonomy Tracker</h1>
           </div>
         </header>
-        <main className="container mx-auto p-4">
+        <main className="container mx-auto p-4 py-6">
           {children}
         </main>
-        <footer className="bg-gray-800 text-white p-4 mt-8">
-          <div className="container mx-auto text-center text-sm">
-            <p>&copy; 2026 Claude Code Autonomy Tracker</p>
+        <footer className="bg-gray-800 text-white py-3 px-4 mt-8">
+          <div className="container mx-auto text-center text-xs text-gray-400">
+            <p>&copy; 2026 longcc.the-ppc-geek.org</p>
           </div>
         </footer>
         <Analytics />
