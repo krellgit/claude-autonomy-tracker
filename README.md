@@ -4,12 +4,12 @@ A Next.js web application that tracks and measures how long Claude Code can work
 
 ## Features
 
-1. Automatic session tracking via Claude Code hooks
-2. Global leaderboard showing longest autonomous sessions
-3. User profiles with personal statistics
-4. Real-time statistics dashboard
-5. RESTful API for programmatic access
-6. No manual submission required - everything is automated
+1. `/longcc` skill - Submit your top 5 longest runs with one command
+2. Automatic session tracking via Claude Code hooks (optional)
+3. Global leaderboard showing longest autonomous sessions
+4. User profiles with personal statistics
+5. Real-time statistics dashboard
+6. RESTful API for programmatic access
 
 ## Tech Stack
 
@@ -100,7 +100,45 @@ vercel
 
 The Postgres environment variables will be automatically added when you connect the database.
 
-## Using the Hook Script
+## Using the /longcc Skill (Recommended)
+
+The easiest way to submit your sessions is with the `/longcc` Claude Code skill.
+
+### Installation
+
+Run this one-line command in your terminal:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/krellgit/claude-autonomy-tracker/master/install-skill.sh)"
+```
+
+### Setup
+
+Set your username as an environment variable:
+
+```bash
+export CLAUDE_TRACKER_USERNAME="your-username"
+```
+
+Add this to your `~/.bashrc` or `~/.zshrc` to make it permanent.
+
+### Usage
+
+Simply run `/longcc` in Claude Code:
+
+```bash
+/longcc
+```
+
+This will:
+1. Analyze your Claude Code session history
+2. Find your top 5 longest autonomous work periods
+3. Display them in a formatted table
+4. Submit them to the leaderboard at https://longcc.the-ppc-geek.org
+
+You can run `/longcc` anytime to update your position on the leaderboard.
+
+## Using the Hook Script (Advanced)
 
 The hook script automatically tracks your Claude Code sessions and submits them to the tracker.
 

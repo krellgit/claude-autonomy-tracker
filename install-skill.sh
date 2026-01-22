@@ -14,7 +14,7 @@ mkdir -p "$SKILL_DIR"
 
 # Download skill files
 echo "📥 Downloading skill files..."
-curl -fsSL "$REPO_URL/skill.json" -o "$SKILL_DIR/skill.json"
+curl -fsSL "$REPO_URL/SKILL.md" -o "$SKILL_DIR/SKILL.md"
 curl -fsSL "$REPO_URL/analyze.py" -o "$SKILL_DIR/analyze.py"
 chmod +x "$SKILL_DIR/analyze.py"
 
