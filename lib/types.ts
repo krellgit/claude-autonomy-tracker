@@ -23,7 +23,9 @@ export interface SessionInput {
 }
 
 export interface Stats {
+  totalUsers: number;
   totalSessions: number;
+  totalDuration: number;
   longestDuration: number;
   averageDuration: number;
   totalActions: number;
@@ -47,13 +49,15 @@ export interface UserRanking {
   username: string;
   best_duration: number;
   best_action_count: number;
+  avg_duration: number;
+  total_duration: number;
   session_count: number;
   latest_session: Date;
 }
 
 export interface UserRankingsParams {
   limit?: number;
-  sortBy?: 'duration' | 'sessions' | 'recent';
+  sortBy?: 'duration' | 'total_time' | 'sessions' | 'recent';
   order?: 'asc' | 'desc';
   username?: string;
 }

@@ -27,6 +27,11 @@ export default async function HomePage({ searchParams }: PageProps) {
   // Parse filters for top users table (always 5)
   const topUsersLimit = 5;
 
+  // Parse sorting mode from URL query params
+  const sortMode = (params.sort as string) || 'duration';
+  const validSortModes = ['duration', 'total_time', 'recent'];
+  const sortBy = validSortModes.includes(sortMode) ? sortMode as 'duration' | 'total_time' | 'recent' : 'duration';
+
   // Parse filters for all sessions table
   const usernameFilter = params.username as string | undefined;
 
@@ -36,7 +41,7 @@ export default async function HomePage({ searchParams }: PageProps) {
 
   try {
     [topUsers, allSessions, stats] = await Promise.all([
-      getUserRankings(topUsersLimit, 'duration', 'desc'), // Top 5 unique users
+      getUserRankings(topUsersLimit, sortBy, 'desc'), // Top 5 unique users with sorting
       getSessionsByUser(usernameFilter, 100), // Up to 5 sessions per user
       getStats()
     ]);
@@ -60,30 +65,30 @@ export default async function HomePage({ searchParams }: PageProps) {
         {stats && stats.totalSessions > 0 && (
           <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <div className="text-xs text-gray-500 dark:text-gray-400">Total Runs</div>
-              <div className="text-2xl font-bold text-blue-600">{stats.totalSessions}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Active Users</div>
+              <div className="text-2xl font-bold text-blue-600">{stats.totalUsers}</div>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <div className="text-xs text-gray-500 dark:text-gray-400">Longest Run</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Global Record</div>
               <div className="text-2xl font-bold text-green-600">
                 {formatDuration(stats.longestDuration)}
               </div>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <div className="text-xs text-gray-500 dark:text-gray-400">Average Run</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">Total Autonomy</div>
               <div className="text-2xl font-bold text-purple-600">
+                {Math.round(stats.totalDuration / 3600)}h
+              </div>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+              <div className="text-xs text-gray-500 dark:text-gray-400">Average Run</div>
+              <div className="text-2xl font-bold text-orange-600">
                 {formatDuration(stats.averageDuration)}
               </div>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
-              <div className="text-xs text-gray-500 dark:text-gray-400">Most Tools Used</div>
-              <div className="text-2xl font-bold text-red-600">
-                {stats.maxActions}
-              </div>
-            </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
               <div className="text-xs text-gray-500 dark:text-gray-400">Total Actions</div>
-              <div className="text-2xl font-bold text-orange-600">
+              <div className="text-2xl font-bold text-red-600">
                 {stats.totalActions.toLocaleString()}
               </div>
             </div>
@@ -93,8 +98,45 @@ export default async function HomePage({ searchParams }: PageProps) {
         {/* Table 1: Top 5 Users (Unique) */}
         <div>
           <h2 className="text-xl font-bold mb-4">Top 5 Users</h2>
+
+          {/* Sorting Tabs */}
+          <div className="flex gap-2 mb-4">
+            <a
+              href="?sort=duration"
+              className={`px-4 py-2 rounded text-sm font-medium transition ${
+                sortBy === 'duration'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              }`}
+            >
+              Best Run
+            </a>
+            <a
+              href="?sort=total_time"
+              className={`px-4 py-2 rounded text-sm font-medium transition ${
+                sortBy === 'total_time'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              }`}
+            >
+              Total Time
+            </a>
+            <a
+              href="?sort=recent"
+              className={`px-4 py-2 rounded text-sm font-medium transition ${
+                sortBy === 'recent'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600'
+              }`}
+            >
+              Recent
+            </a>
+          </div>
+
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-            Each user shown once with their longest autonomous run
+            {sortBy === 'duration' && 'Each user shown once with their longest autonomous run'}
+            {sortBy === 'total_time' && 'Each user shown once with their total accumulated time'}
+            {sortBy === 'recent' && 'Each user shown once, sorted by most recent activity'}
           </p>
           <UserRankingsTable rankings={topUsers} title="" />
         </div>

@@ -124,7 +124,9 @@ export async function getStats(): Promise<Stats> {
   // Get total sessions and duration stats
   const { rows: statsRows } = await sql`
     SELECT
+      COUNT(DISTINCT LOWER(username)) as total_users,
       COUNT(*) as total_sessions,
+      SUM(autonomous_duration)::INTEGER as total_duration,
       MAX(autonomous_duration) as longest_duration,
       AVG(autonomous_duration)::INTEGER as average_duration,
       SUM(action_count)::INTEGER as total_actions,
@@ -147,7 +149,9 @@ export async function getStats(): Promise<Stats> {
   `;
 
   return {
+    totalUsers: parseInt(statsRows[0].total_users) || 0,
     totalSessions: parseInt(statsRows[0].total_sessions) || 0,
+    totalDuration: parseInt(statsRows[0].total_duration) || 0,
     longestDuration: parseInt(statsRows[0].longest_duration) || 0,
     averageDuration: parseInt(statsRows[0].average_duration) || 0,
     totalActions: parseInt(statsRows[0].total_actions) || 0,
@@ -188,13 +192,14 @@ export async function getUserStats(username: string) {
  */
 export async function getUserRankings(
   limit: number = 50,
-  sortBy: 'duration' | 'sessions' | 'recent' = 'duration',
+  sortBy: 'duration' | 'total_time' | 'sessions' | 'recent' = 'duration',
   order: 'asc' | 'desc' = 'desc',
   usernameFilter?: string
 ): Promise<UserRanking[]> {
   // Validate sort option and map to column name
   const SORT_COLUMNS: Record<string, string> = {
     'duration': 'best_duration',
+    'total_time': 'total_duration',
     'sessions': 'session_count',
     'recent': 'latest_session'
   };
@@ -210,6 +215,8 @@ export async function getUserRankings(
         MAX(username) as username,
         MAX(autonomous_duration)::INTEGER as best_duration,
         MAX(action_count)::INTEGER as best_action_count,
+        AVG(autonomous_duration)::INTEGER as avg_duration,
+        SUM(autonomous_duration)::INTEGER as total_duration,
         COUNT(*)::INTEGER as session_count,
         MAX(created_at) as latest_session
       FROM sessions
@@ -227,6 +234,8 @@ export async function getUserRankings(
         MAX(username) as username,
         MAX(autonomous_duration)::INTEGER as best_duration,
         MAX(action_count)::INTEGER as best_action_count,
+        AVG(autonomous_duration)::INTEGER as avg_duration,
+        SUM(autonomous_duration)::INTEGER as total_duration,
         COUNT(*)::INTEGER as session_count,
         MAX(created_at) as latest_session
       FROM sessions

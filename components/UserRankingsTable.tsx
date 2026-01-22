@@ -56,7 +56,7 @@ export default function UserRankingsTable({ rankings, title = 'User Rankings' }:
                 Best Time
               </th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
-                Sessions
+                Average Run
               </th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-600 dark:text-gray-300 uppercase tracking-wider">
                 Last Active
@@ -93,8 +93,8 @@ export default function UserRankingsTable({ rankings, title = 'User Rankings' }:
                   )}
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap">
-                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">
-                    {ranking.session_count} {ranking.session_count === 1 ? 'session' : 'sessions'}
+                  <span className="text-sm font-semibold text-purple-600 dark:text-purple-400">
+                    {formatDuration(ranking.avg_duration)}
                   </span>
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
