@@ -68,7 +68,7 @@ export async function getSessions(params: QueryParams = {}): Promise<Session[]> 
     const query = `
       SELECT * FROM sessions
       WHERE LOWER(username) = LOWER($1)
-        AND LOWER(username) != 'crowd test'
+        AND LOWER(username) NOT LIKE '%test%'
       ORDER BY ${sortColumn} ${orderDirection}
       LIMIT $2
       OFFSET $3
@@ -78,7 +78,7 @@ export async function getSessions(params: QueryParams = {}): Promise<Session[]> 
   } else {
     const query = `
       SELECT * FROM sessions
-      WHERE LOWER(username) != 'crowd test'
+      WHERE LOWER(username) NOT LIKE '%test%'
       ORDER BY ${sortColumn} ${orderDirection}
       LIMIT $1
       OFFSET $2
@@ -94,7 +94,7 @@ export async function getSessions(params: QueryParams = {}): Promise<Session[]> 
 export async function getLeaderboard(limit: number = 10): Promise<Session[]> {
   const { rows } = await sql<Session>`
     SELECT * FROM sessions
-    WHERE LOWER(username) != 'crowd test'
+    WHERE LOWER(username) NOT LIKE '%test%'
     ORDER BY autonomous_duration DESC
     LIMIT ${limit}
   `;
@@ -109,7 +109,7 @@ export async function getUserSessions(username: string, limit: number = 50): Pro
   const { rows } = await sql<Session>`
     SELECT * FROM sessions
     WHERE LOWER(username) = LOWER(${username})
-      AND LOWER(username) != 'crowd test'
+      AND LOWER(username) NOT LIKE '%test%'
     ORDER BY created_at DESC
     LIMIT ${limit}
   `;
@@ -130,7 +130,7 @@ export async function getStats(): Promise<Stats> {
       SUM(action_count)::INTEGER as total_actions,
       MAX(action_count) as max_actions
     FROM sessions
-    WHERE LOWER(username) != 'crowd test'
+    WHERE LOWER(username) NOT LIKE '%test%'
   `;
 
   // Get top users (case-insensitive grouping)
@@ -140,7 +140,7 @@ export async function getStats(): Promise<Stats> {
       COUNT(*) as session_count,
       SUM(autonomous_duration)::INTEGER as total_duration
     FROM sessions
-    WHERE LOWER(username) != 'crowd test'
+    WHERE LOWER(username) NOT LIKE '%test%'
     GROUP BY LOWER(username)
     ORDER BY total_duration DESC
     LIMIT 10
@@ -172,7 +172,7 @@ export async function getUserStats(username: string) {
       SUM(action_count)::INTEGER as total_actions
     FROM sessions
     WHERE LOWER(username) = LOWER(${username})
-      AND LOWER(username) != 'crowd test'
+      AND LOWER(username) NOT LIKE '%test%'
   `;
 
   return {
@@ -214,7 +214,7 @@ export async function getUserRankings(
         MAX(created_at) as latest_session
       FROM sessions
       WHERE LOWER(username) = LOWER($1)
-        AND LOWER(username) != 'crowd test'
+        AND LOWER(username) NOT LIKE '%test%'
       GROUP BY LOWER(username)
       ORDER BY ${sortColumn} ${orderDirection}
       LIMIT $2
@@ -230,7 +230,7 @@ export async function getUserRankings(
         COUNT(*)::INTEGER as session_count,
         MAX(created_at) as latest_session
       FROM sessions
-      WHERE LOWER(username) != 'crowd test'
+      WHERE LOWER(username) NOT LIKE '%test%'
       GROUP BY LOWER(username)
       ORDER BY ${sortColumn} ${orderDirection}
       LIMIT $1
@@ -255,7 +255,7 @@ export async function getSessionsByUser(
                ROW_NUMBER() OVER (PARTITION BY LOWER(username) ORDER BY autonomous_duration DESC) as rn
         FROM sessions
         WHERE LOWER(username) = LOWER($1)
-          AND LOWER(username) != 'crowd test'
+          AND LOWER(username) NOT LIKE '%test%'
       ) ranked
       WHERE rn <= 5
       ORDER BY username, autonomous_duration DESC
@@ -268,7 +268,7 @@ export async function getSessionsByUser(
         SELECT *,
                ROW_NUMBER() OVER (PARTITION BY LOWER(username) ORDER BY autonomous_duration DESC) as rn
         FROM sessions
-        WHERE LOWER(username) != 'crowd test'
+        WHERE LOWER(username) NOT LIKE '%test%'
       ) ranked
       WHERE rn <= 5
       ORDER BY username, autonomous_duration DESC
