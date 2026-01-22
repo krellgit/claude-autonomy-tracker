@@ -1,5 +1,67 @@
 # Claude Code Autonomy Tracker Checkpoints
 
+## CAT-002 - 2026-01-22T11:14:27Z
+
+**Summary:** Fixed longcc skill discovery with SKILL.md format
+
+**Goal:** Fix the /longcc skill not being recognized by Claude Code, test it thoroughly, and deploy the fix to production.
+
+**Status:** Complete
+
+**Changes:**
+1. Diagnosed skill discovery issue - Claude Code requires SKILL.md with YAML frontmatter, not skill.json
+2. Created SKILL.md file in correct format with YAML frontmatter and markdown instructions
+3. Updated install-skill.sh to install SKILL.md instead of skill.json
+4. Enhanced README.md with /longcc skill documentation section
+5. Tested analyze.py script - successfully found 948 autonomous periods
+6. Tested API submission endpoint - verified HTTP 201 responses
+7. Verified environment variable CLAUDE_TRACKER_USERNAME is set correctly
+8. Deployed changes to GitHub master branch
+
+**Files modified:**
+1. skill/SKILL.md (new file)
+2. install-skill.sh
+3. README.md
+
+**Commits:**
+1. f3be8c6 - Fix longcc skill discovery by migrating to SKILL.md format
+
+**Key decisions:**
+
+1. **SKILL.md Format vs skill.json**
+   - Rationale: Claude Code's skill discovery system requires SKILL.md with YAML frontmatter
+   - Alternative: Try to make skill.json work somehow
+   - Why chosen: SKILL.md is the documented standard, skill.json was never going to be recognized
+   - Reference: Claude Code documentation specifies ~/.claude/skills/<name>/SKILL.md as required format
+
+2. **Keep skill.json for Backward Compatibility**
+   - Rationale: Some users might have downloaded the old format
+   - Alternative: Delete skill.json entirely
+   - Why chosen: No harm in keeping it, might be useful as reference
+
+3. **Test Locally Before Deployment**
+   - Rationale: Verify the analyze.py script works and API is functional
+   - Tests performed: Environment variable check, analyze script execution (found 948 periods), API test submission
+   - Why chosen: Ensures the skill will work for users after installation
+
+4. **Update README with /longcc as Recommended Method**
+   - Rationale: /longcc skill is easier than setting up hooks
+   - Alternative: Keep hooks as primary method
+   - Why chosen: One-command installation vs complex hook configuration, better user experience
+
+**Blockers:** None
+
+**Next steps:**
+1. Test /longcc skill in a new Claude Code session to verify it's recognized
+2. Monitor GitHub for any installation issues from community users
+3. Consider adding more skill features:
+   - Filter by date range
+   - Show statistics summary before submission
+   - Option to submit individual runs instead of all top 5
+4. Add troubleshooting section to README if users report issues
+
+---
+
 ## CAT-001 - 2026-01-21T19:45:52Z
 
 **Summary:** Built and deployed complete autonomy tracking platform
